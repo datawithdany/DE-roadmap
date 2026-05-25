@@ -460,6 +460,7 @@ html, body {
   height: 100%;
 }
 
+.naija-view { display: none; }
 .naija-view.visible { display: flex; }
 
 .naija-main-header {
@@ -654,6 +655,7 @@ html, body {
   flex-direction: column;
   height: 100%;
 }
+.phase-view { display: none; }
 .phase-view.visible { display: flex; }
 
 /* ── KEYBOARD HINT ───────────────────────────────── */
@@ -773,7 +775,7 @@ html, body {
   <main class="main">
 
     <!-- PHASE VIEW -->
-    <div class="phase-view visible" id="phaseView">
+    <div class="phase-view" id="phaseView">
       <div class="main-header">
         <div class="phase-indicator">
           <span class="phase-counter" id="phaseCounter">PHASE 00</span>
@@ -1004,16 +1006,24 @@ function renderPhase() {
   if(!p) return;
   const pr = phaseProg(p);
   const pct = Math.round(pr.d/pr.t*100);
-  const idx = PHASES.indexOf(p);
 
-  document.getElementById('phaseCounter').textContent = 'PHASE '+p.num;
-  document.getElementById('phaseFraction').textContent = pr.d+' / '+pr.t;
-  document.getElementById('ghostNum').textContent = p.num;
-  document.getElementById('phaseBigTitle').innerHTML = `<span>${p.title}</span> <span class="gold">${p.gold}</span><span class="ghost-num">${p.num}</span>`;
-  document.getElementById('phaseTier').textContent = p.tier;
-  document.getElementById('phaseBar').style.width = pct+'%';
-  document.getElementById('phasePct').textContent = pct+'%';
-  if(pct===100) document.getElementById('phaseTier').innerHTML = `<span class="phase-complete-badge">✦ Phase Complete</span>`;
+  const elCounter = document.getElementById('phaseCounter');
+  const elFraction = document.getElementById('phaseFraction');
+  const elTitle = document.getElementById('phaseBigTitle');
+  const elTier = document.getElementById('phaseTier');
+  const elBar = document.getElementById('phaseBar');
+  const elPct = document.getElementById('phasePct');
+  const elStats = document.getElementById('statsStrip');
+  const elSkills = document.getElementById('skillsScroll');
+
+  if(!elCounter || !elTitle || !elSkills) return;
+
+  elCounter.textContent = 'PHASE '+p.num;
+  if(elFraction) elFraction.textContent = pr.d+' / '+pr.t;
+  elTitle.innerHTML = '<span>'+p.title+'</span> <span class="gold">'+p.gold+'</span><span class="ghost-num">'+p.num+'</span>';
+  if(elTier) elTier.innerHTML = pct===100 ? '<span class="phase-complete-badge">✦ Phase Complete</span>' : p.tier;
+  if(elBar) elBar.style.width = pct+'%';
+  if(elPct) elPct.textContent = pct+'%';
 
   const {d,t} = totalProg();
   document.getElementById('statsStrip').innerHTML = `
@@ -1080,32 +1090,39 @@ function toggleNj(id) {
 }
 
 function switchPhase(id) {
-  activePhase=id;
-  document.getElementById('phaseView').classList.add('visible');
-  document.getElementById('naijaView').classList.remove('visible');
-  renderRail(); renderPhase();
+  activePhase = id;
+  document.getElementById('phaseView').style.display = 'flex';
+  document.getElementById('naijaView').style.display = 'none';
+  renderRail();
+  renderPhase();
+  document.getElementById('skillsScroll').scrollTop = 0;
 }
 
 function showNaija() {
-  document.getElementById('phaseView').classList.remove('visible');
-  document.getElementById('naijaView').classList.add('visible');
+  document.getElementById('phaseView').style.display = 'none';
+  document.getElementById('naijaView').style.display = 'flex';
   renderNaija();
 }
 
 function hideNaija() {
-  document.getElementById('naijaView').classList.remove('visible');
-  document.getElementById('phaseView').classList.add('visible');
-  renderRail(); renderPhase();
+  document.getElementById('naijaView').style.display = 'none';
+  document.getElementById('phaseView').style.display = 'flex';
+  renderRail();
+  renderPhase();
 }
 
 document.addEventListener('keydown', e=>{
-  if(document.getElementById('naijaView').classList.contains('visible')) return;
+  if(document.getElementById('naijaView').style.display === 'flex') return;
   const idx = PHASES.findIndex(p=>p.id===activePhase);
   if(e.key==='ArrowDown' && idx<PHASES.length-1) { e.preventDefault(); switchPhase(PHASES[idx+1].id); }
   if(e.key==='ArrowUp' && idx>0) { e.preventDefault(); switchPhase(PHASES[idx-1].id); }
 });
 
-load(); renderRail(); renderPhase();
+load();
+document.getElementById('phaseView').style.display = 'flex';
+document.getElementById('naijaView').style.display = 'none';
+renderRail();
+renderPhase();
 </script>
 </body>
 </html>
