@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataWithDanny — Engineering Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Helvetica+Neue:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --surface: #0f0f0f;
+  --surface2: #141414;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.12);
+  --gold: #C9A84C;
+  --gold-dim: rgba(201,168,76,0.15);
+  --gold-glow: rgba(201,168,76,0.08);
+  --text: #E8E4DC;
+  --text-dim: #4A4A4A;
+  --text-mid: #888;
+  --display: 'Cormorant Garamond', Georgia, serif;
+  --body: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --mono: 'DM Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--black);
+  color: var(--text);
+  font-family: var(--body);
+  overflow: hidden;
+}
+
+/* ── LAYOUT ─────────────────────────────────────── */
+.app {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── LEFT RAIL ───────────────────────────────────── */
+.rail {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.rail-logo {
+  padding: 32px 28px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.logo-dwd {
+  font-family: var(--body);
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+  color: #fff;
+  line-height: 1;
+}
+
+.logo-dwd em {
+  color: var(--gold);
+  font-style: normal;
+}
+
+.logo-tagline {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-top: 6px;
+}
+
+.rail-overall {
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.overall-num {
+  font-family: var(--display);
+  font-size: 56px;
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.overall-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  margin-bottom: 14px;
+}
+
+.overall-track {
+  height: 1px;
+  background: var(--border2);
+  position: relative;
+}
+
+.overall-fill {
+  position: absolute;
+  top: 0; left: 0; height: 100%;
+  background: var(--gold);
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+.rail-phases {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 0;
+  scrollbar-width: none;
+}
+
+.rail-phases::-webkit-scrollbar { display: none; }
+
+.phase-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.phase-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--gold);
+  transform: scaleY(0);
+  transition: transform 0.2s;
+}
+
+.phase-item:hover { background: var(--gold-glow); }
+.phase-item:hover::before { transform: scaleY(1); }
+.phase-item.active { background: var(--gold-dim); }
+.phase-item.active::before { transform: scaleY(1); }
+
+.phase-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  min-width: 20px;
+  transition: color 0.2s;
+}
+
+.phase-item.active .phase-num,
+.phase-item:hover .phase-num { color: var(--gold); }
+
+.phase-name-wrap { flex: 1; min-width: 0; }
+
+.phase-name {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-mid);
+  transition: color 0.2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.phase-item.active .phase-name,
+.phase-item:hover .phase-name { color: var(--text); }
+.phase-item.phase-done .phase-name { color: var(--text-dim); }
+
+.phase-pip {
+  width: 28px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.phase-pip-fill {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 1px;
+  transition: width 0.4s ease;
+}
+
+.rail-naija {
+  padding: 20px 28px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.naija-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.naija-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.naija-btn.ready {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: var(--gold-dim);
+}
+
+.naija-btn .nb-icon {
+  font-size: 14px;
+  transition: transform 0.3s;
+}
+
+.naija-btn:hover .nb-icon { transform: translateX(4px); }
+
+/* ── MAIN PANEL ──────────────────────────────────── */
+.main {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--black);
+}
+
+.main-header {
+  padding: 32px 56px 0;
+  flex-shrink: 0;
+}
+
+.phase-indicator {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+.phase-counter {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+}
+
+.phase-fraction {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-mid);
+  margin-left: auto;
+}
+
+.phase-big-title {
+  font-family: var(--display);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -2px;
+  color: var(--text);
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.phase-big-title .ghost-num {
+  position: absolute;
+  right: 0;
+  top: -10px;
+  font-size: 140px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.02);
+  letter-spacing: -8px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
+
+.phase-big-title .gold { color: var(--gold); }
+
+.phase-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.meta-tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.meta-tag.gold { color: var(--gold); }
+
+.phase-progress-bar {
+  height: 1px;
+  background: var(--border);
+  width: 100%;
+  flex: 1;
+}
+
+.phase-progress-fill {
+  height: 100%;
+  background: var(--gold);
+  transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+
+.pct-display {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+/* ── SKILLS LIST ─────────────────────────────────── */
+.skills-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 56px 40px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+
+.skills-scroll::-webkit-scrollbar { width: 4px; }
+.skills-scroll::-webkit-scrollbar-track { background: transparent; }
+.skills-scroll::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+.mastered-note {
+  padding: 24px 0 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.skill-row::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+.skill-row.done::after { width: 100%; }
+.skill-row:hover { padding-left: 8px; }
+.skill-row.mastered { cursor: default; }
+.skill-row.mastered:hover { padding-left: 0; }
+
+.sk-check {
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--border2);
+  border-radius: 1px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.skill-row.done .sk-check,
+.skill-row.mastered .sk-check {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+
+.sk-check-mark {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s;
+  font-size: 10px;
+  color: var(--black);
+  font-weight: 700;
+}
+
+.skill-row.done .sk-check-mark,
+.skill-row.mastered .sk-check-mark {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.sk-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-mid);
+  letter-spacing: 0.2px;
+  line-height: 1.4;
+  transition: color 0.2s;
+}
+
+.skill-row:hover .sk-name { color: var(--text); }
+.skill-row.done .sk-name { color: var(--text); }
+.skill-row.mastered .sk-name { color: var(--text-dim); }
+
+.sk-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.skill-row.done .sk-time { color: var(--gold); }
+
+/* ── NAIJVOTE VIEW ───────────────────────────────── */
+.naija-view {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+}
+
+.naija-view.visible { display: flex; }
+
+.naija-main-header {
+  padding: 40px 56px 32px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.naija-eyebrow {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.naija-big-title {
+  font-family: var(--display);
+  font-size: 72px;
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -3px;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.naija-big-title span { color: var(--gold); }
+
+.naija-unlock-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nub-track {
+  flex: 1;
+  height: 1px;
+  background: var(--border2);
+  position: relative;
+}
+
+.nub-fill {
+  position: absolute;
+  top: 0; left: 0; height: 100%;
+  background: var(--gold);
+  transition: width 0.6s ease;
+}
+
+.nub-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+
+.naija-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 56px 40px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border2) transparent;
+}
+
+.naija-section-title {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-top: 8px;
+}
+
+.prereq-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.prereq-card {
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 18px 20px;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.prereq-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.prereq-card.done::before { transform: scaleX(1); }
+.prereq-card.manual { cursor: pointer; }
+.prereq-card.manual:hover { border-color: var(--border2); background: var(--gold-glow); }
+.prereq-card.done { border-color: rgba(201,168,76,0.2); background: rgba(201,168,76,0.04); }
+
+.pc-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.pc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border2);
+  transition: background 0.3s;
+}
+
+.prereq-card.done .pc-dot { background: var(--gold); }
+
+.pc-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.prereq-card.done .pc-label { color: var(--gold); }
+
+.pc-name {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+
+.prereq-card.done .pc-name { color: var(--text); }
+
+.naija-phases-list { margin-bottom: 16px; }
+
+.nv-phase-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.nv-phase-num {
+  font-family: var(--display);
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--text-dim);
+  line-height: 1;
+  min-width: 40px;
+  letter-spacing: -1px;
+}
+
+.nv-phase-content { flex: 1; }
+
+.nv-phase-name {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.nv-phase-detail {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 1.5px;
+}
+
+.nv-phase-time {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
+/* ── PHASE VIEW WRAPPER ──────────────────────────── */
+.phase-view {
+  display: none;
+  flex-direction: column;
+  height: 100%;
+}
+.phase-view.visible { display: flex; }
+
+/* ── KEYBOARD HINT ───────────────────────────────── */
+.kb-hint {
+  position: fixed;
+  bottom: 24px;
+  right: 32px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 1.5px;
+  display: flex;
+  gap: 16px;
+}
+
+.kb-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── STATS STRIP ─────────────────────────────────── */
+.stats-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.stat-cell {
+  padding: 16px 56px;
+  border-right: 1px solid var(--border);
+}
+
+.stat-cell:last-child { border-right: none; }
+
+.sc-num {
+  font-family: var(--display);
+  font-size: 36px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.sc-num.gold { color: var(--gold); }
+
+.sc-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── COMPLETE STATE ──────────────────────────────── */
+@keyframes goldPulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+.phase-complete-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: goldPulse 3s infinite;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- LEFT RAIL -->
+  <aside class="rail">
+    <div class="rail-logo">
+      <div class="logo-mark">
+        <svg width="36" height="36" viewBox="0 0 80 80" fill="none">
+          <rect width="80" height="80" rx="8" fill="#1a1a1a"/>
+          <path d="M12 20 L12 60 L28 60 Q46 60 46 40 Q46 20 28 20 Z M22 30 L26 30 Q36 30 36 40 Q36 50 26 50 L22 50 Z" fill="white"/>
+          <path d="M52 20 L52 60 L62 60 L62 44 L70 60 L80 60 L80 20 L70 20 L70 36 L62 20 Z" fill="white"/>
+          <polygon points="44,12 54,12 60,24 50,24" fill="#C9A84C"/>
+        </svg>
+        <div>
+          <div class="logo-dwd">DataWith<em>Danny</em></div>
+        </div>
+      </div>
+      <div class="logo-tagline">Engineering Roadmap</div>
+    </div>
+
+    <div class="rail-overall">
+      <div class="overall-num" id="railPct">12%</div>
+      <div class="overall-label">Overall Progress</div>
+      <div class="overall-track">
+        <div class="overall-fill" id="railBar" style="width:12%"></div>
+      </div>
+    </div>
+
+    <div class="rail-phases" id="railPhases"></div>
+
+    <div class="rail-naija">
+      <button class="naija-btn" id="naijaBtnRail" onclick="showNaija()">
+        <span>NaijaVote</span>
+        <span class="nb-icon">→</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- PHASE VIEW -->
+    <div class="phase-view visible" id="phaseView">
+      <div class="main-header">
+        <div class="phase-indicator">
+          <span class="phase-counter" id="phaseCounter">PHASE 00</span>
+          <span class="phase-fraction" id="phaseFraction">0 / 0</span>
+        </div>
+        <div class="phase-big-title" id="phaseBigTitle">
+          <span class="ghost-num" id="ghostNum">00</span>
+        </div>
+        <div class="phase-meta-row">
+          <span class="meta-tag" id="phaseTier"></span>
+          <div class="phase-progress-bar">
+            <div class="phase-progress-fill" id="phaseBar" style="width:0%"></div>
+          </div>
+          <span class="pct-display" id="phasePct">0%</span>
+        </div>
+      </div>
+
+      <div class="stats-strip" id="statsStrip"></div>
+
+      <div class="skills-scroll" id="skillsScroll"></div>
+    </div>
+
+    <!-- NAIJA VIEW -->
+    <div class="naija-view" id="naijaView">
+      <div class="naija-main-header">
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+          <button onclick="hideNaija()" style="background:transparent;border:none;color:var(--text-dim);font-family:var(--mono);font-size:9px;letter-spacing:2px;cursor:pointer;text-transform:uppercase;padding:0;display:flex;align-items:center;gap:8px;transition:color 0.2s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-dim)'">← Back</button>
+        </div>
+        <div class="naija-eyebrow">Capstone Project · Q4 2026 — Q1 2027</div>
+        <div class="naija-big-title">Naija<span>Vote</span></div>
+        <div style="font-size:13px;font-weight:300;color:var(--text-mid);max-width:520px;line-height:1.6;margin-bottom:24px;letter-spacing:0.2px">Real-time election analytics platform. 177,000 polling units. 50 million votes. Nigerian election transparency built on a production-grade streaming pipeline.</div>
+        <div class="naija-unlock-bar">
+          <span style="font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase">Prerequisites</span>
+          <div class="nub-track"><div class="nub-fill" id="nubFill" style="width:0%"></div></div>
+          <span class="nub-label" id="nubLabel">0 / 9</span>
+        </div>
+      </div>
+
+      <div class="naija-scroll">
+        <div class="naija-section-title">Prerequisites</div>
+        <div class="prereq-grid" id="prereqGrid"></div>
+
+        <div class="naija-section-title">Build Phases</div>
+        <div class="naija-phases-list" id="naijaPhaseslist"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="kb-hint">
+  <span class="kb-key">↑↓ Navigate phases</span>
+  <span class="kb-key">Space Mark done</span>
+</div>
+
+<script>
+const PHASES = [
+  { id:'p0', num:'00', label:'Already Mastered', title:'Already', gold:'Mastered', mastered:true, tier:'Foundation · Complete',
+    skills:['Medallion Architecture','Delta Lake fundamentals','DLT Declarative Pipelines','Auto Loader — batch mode','Lakeflow Connect','SCD Type 1 & Type 2','DLT Expectations — data quality','Incremental Bronze — Left Anti Join','Mixed load strategies per table','SHA-256 surrogate keys','Star schema dimensional modelling','Databricks Workflows orchestration','Unity Catalog basics','AI/BI Metric Views','AI/BI Dashboard','Databricks Genie','PySpark basic transformations','Structured SQL in Databricks'] },
+  { id:'p1', num:'01', label:'Databricks I', title:'Databricks', gold:'Foundation', tier:'Tier 1 · 4 weeks',
+    skills:[
+      {n:'OPTIMIZE command',t:'3 days'},{n:'Z-ORDER BY — when and why',t:'2 days'},{n:'VACUUM — retention and safety',t:'2 days'},
+      {n:'Delta table properties',t:'1 day'},{n:'Time travel — VERSION AS OF / TIMESTAMP AS OF',t:'2 days'},{n:'Restore table to previous version',t:'1 day'},
+      {n:'Change Data Feed (CDF)',t:'3 days'},{n:'DESCRIBE HISTORY',t:'1 day'},{n:'Spark execution model — jobs, stages, tasks',t:'3 days'},
+      {n:'DAG visualisation — Spark UI',t:'2 days'},{n:'Lazy evaluation — why it matters',t:'1 day'},{n:'Shuffles — causes and cost',t:'3 days'},
+      {n:'Partitioning strategy — repartition vs coalesce',t:'2 days'},{n:'Broadcast joins vs sort-merge joins',t:'3 days'},
+      {n:'Caching and persistence — cache() vs persist()',t:'2 days'},{n:'Adaptive Query Execution (AQE)',t:'2 days'},
+      {n:'Delta MERGE — full upsert syntax and patterns',t:'3 days'},{n:'Insert-only MERGE',t:'1 day'},
+      {n:'CDC — Change Data Capture patterns',t:'3 days'},{n:'Idempotent writes',t:'2 days'}
+    ]},
+  { id:'p2', num:'02', label:'Databricks II', title:'Databricks', gold:'Production', tier:'Tier 2 · 4 weeks',
+    skills:[
+      {n:'DLT pipeline modes — Development vs Production',t:'1 day'},{n:'DLT Auto Loader in streaming mode',t:'3 days'},
+      {n:'DLT quarantine pattern',t:'2 days'},{n:'DLT pipeline events and observability',t:'2 days'},
+      {n:'DLT with CDC sources',t:'3 days'},{n:'Pipeline lineage in Unity Catalog',t:'2 days'},
+      {n:'Row-level security',t:'2 days'},{n:'Column masking',t:'2 days'},{n:'DESCRIBE LINEAGE',t:'1 day'},
+      {n:'External locations and storage credentials',t:'2 days'},{n:'Tags and classifications',t:'1 day'},
+      {n:'Databricks Asset Bundles — structure and purpose',t:'3 days'},{n:'bundle.yml — defining jobs as code',t:'2 days'},
+      {n:'Environment targets — dev, staging, prod',t:'2 days'},{n:'GitHub Actions + DABs deployment',t:'3 days'},
+      {n:'Secrets management with DABs',t:'1 day'}
+    ]},
+  { id:'p3', num:'03', label:'Databricks III', title:'Databricks', gold:'Performance', tier:'Tier 3–4 · 3 weeks',
+    skills:[
+      {n:'Reading execution plans — EXPLAIN',t:'2 days'},{n:'Partition pruning — verify it is working',t:'2 days'},
+      {n:'Predicate pushdown',t:'1 day'},{n:'File skipping with Z-ORDER',t:'2 days'},
+      {n:'ANALYZE TABLE — statistics',t:'1 day'},{n:'Liquid clustering',t:'2 days'},{n:'Bloom filter indexes',t:'1 day'},
+      {n:'Cluster types — All-Purpose vs Job vs SQL Warehouse',t:'1 day'},{n:'Autoscaling strategy',t:'1 day'},
+      {n:'Photon engine — what it accelerates',t:'1 day'},{n:'DBU cost optimisation',t:'2 days'},
+      {n:'Small file problem and auto-compaction',t:'2 days'},{n:'Databricks system tables — access, compute, lakeflow',t:'2 days'},
+      {n:'Pipeline monitoring with system tables',t:'2 days'},{n:'Lakehouse Monitoring',t:'2 days'},
+      {n:'Service principals',t:'2 days'},{n:'Secret scopes and secrets management',t:'1 day'}
+    ]},
+  { id:'p4', num:'04', label:'dbt', title:'Analytics', gold:'Engineering — dbt', tier:'dbt · 6 weeks',
+    skills:[
+      {n:'dbt core concepts — models, refs, sources',t:'3 days'},{n:'Staging → Intermediate → Mart layers',t:'3 days'},
+      {n:'sources.yml and schema.yml',t:'2 days'},{n:'Freshness tests',t:'1 day'},
+      {n:'dbt tests — not_null, unique, relationships',t:'2 days'},{n:'Custom generic tests',t:'2 days'},
+      {n:'Incremental models',t:'3 days'},{n:'Snapshots — SCD Type 2 in dbt',t:'2 days'},
+      {n:'Macros and Jinja templating',t:'3 days'},{n:'dbt documentation and auto-lineage',t:'2 days'},
+      {n:'dbt-databricks adapter',t:'2 days'},{n:'dbt + Unity Catalog',t:'2 days'},
+      {n:'dbt CI/CD with GitHub Actions',t:'3 days'},{n:'dbt metrics layer',t:'2 days'}
+    ]},
+  { id:'p5', num:'05', label:'Azure', title:'Cloud', gold:'Azure', tier:'Cloud · 5 weeks',
+    skills:[
+      {n:'Azure fundamentals — subscriptions and resource groups',t:'2 days'},{n:'ADLS Gen2 — storage architecture',t:'3 days'},
+      {n:'Azure Databricks workspace setup',t:'2 days'},{n:'Azure Event Hubs — Kafka-compatible',t:'3 days'},
+      {n:'Azure Key Vault integration',t:'2 days'},{n:'Managed Identity — no hardcoded secrets',t:'2 days'},
+      {n:'Azure Monitor and Log Analytics',t:'2 days'},{n:'Azure Data Factory basics',t:'3 days'},
+      {n:'RBAC — role-based access control',t:'2 days'},{n:'Private endpoints — conceptual understanding',t:'1 day'},
+      {n:'Cost management and budgets',t:'2 days'}
+    ]},
+  { id:'p6', num:'06', label:'Airflow', title:'Orchestration', gold:'Airflow', tier:'Orchestration · 4 weeks',
+    skills:[
+      {n:'Airflow core concepts — DAGs, operators, tasks',t:'3 days'},{n:'Airflow architecture — scheduler, worker, webserver',t:'2 days'},
+      {n:'Writing DAGs in Python',t:'3 days'},{n:'Sensors and triggers',t:'2 days'},
+      {n:'XComs — passing data between tasks',t:'2 days'},{n:'Connections and Variables',t:'1 day'},
+      {n:'Airflow + Databricks operator',t:'3 days'},{n:'Backfill and catchup runs',t:'2 days'},
+      {n:'Airflow on Docker — local setup',t:'2 days'},{n:'MWAA or Astronomer — managed Airflow',t:'2 days'}
+    ]},
+  { id:'p7', num:'07', label:'Streaming', title:'Kafka &', gold:'Streaming', tier:'Streaming · 6 weeks',
+    skills:[
+      {n:'Kafka fundamentals — topics, partitions, offsets',t:'3 days'},{n:'Producers and consumers',t:'2 days'},
+      {n:'Consumer groups and rebalancing',t:'2 days'},{n:'Schema Registry — Avro and JSON schemas',t:'2 days'},
+      {n:'Confluent Cloud setup',t:'1 day'},{n:'Spark Structured Streaming — readStream',t:'3 days'},
+      {n:'Watermarking and late data handling',t:'3 days'},{n:'Windowed aggregations',t:'3 days'},
+      {n:'Exactly-once semantics',t:'2 days'},{n:'Kafka to Databricks Auto Loader streaming',t:'3 days'},
+      {n:'Dead letter queue pattern',t:'2 days'},{n:'DLT Streaming Tables — deep dive',t:'3 days'},
+      {n:'Sports scores streaming pipeline — learning project',t:'1 week'}
+    ]},
+  { id:'p8', num:'08', label:'Docker & K8s', title:'Containers &', gold:'Kubernetes', tier:'DevOps · 5 weeks',
+    skills:[
+      {n:'Docker fundamentals — images, containers, layers',t:'3 days'},{n:'Dockerfile — building your own image',t:'2 days'},
+      {n:'Docker Compose — multi-container applications',t:'3 days'},{n:'Containerising Python data pipelines',t:'2 days'},
+      {n:'Docker registry — push and pull',t:'1 day'},{n:'Kubernetes fundamentals — pods, nodes, clusters',t:'3 days'},
+      {n:'Deployments and ReplicaSets',t:'2 days'},{n:'Services and networking',t:'2 days'},
+      {n:'ConfigMaps and Secrets',t:'2 days'},{n:'Helm charts basics',t:'3 days'},
+      {n:'AKS — Azure Kubernetes Service',t:'3 days'}
+    ]},
+  { id:'p9', num:'09', label:'Terraform & CI/CD', title:'IaC &', gold:'CI/CD', tier:'Infrastructure · 4 weeks',
+    skills:[
+      {n:'Terraform fundamentals — providers, resources, state',t:'3 days'},{n:'Terraform for Azure resources',t:'3 days'},
+      {n:'Terraform for Databricks workspace',t:'2 days'},{n:'Terraform modules and reuse',t:'2 days'},
+      {n:'Remote state — Azure blob backend',t:'1 day'},{n:'GitHub Actions — workflows, jobs, steps',t:'2 days'},
+      {n:'CI pipeline — lint, test, validate',t:'2 days'},{n:'CD pipeline — deploy to Databricks',t:'3 days'},
+      {n:'Environment promotion — dev to staging to prod',t:'2 days'},{n:'Secrets in GitHub Actions',t:'1 day'}
+    ]},
+  { id:'p10', num:'10', label:'AWS', title:'Cloud', gold:'AWS', tier:'Cloud · 4 weeks',
+    skills:[
+      {n:'AWS fundamentals — IAM, regions, core services',t:'2 days'},{n:'S3 — storage, policies, versioning',t:'2 days'},
+      {n:'AWS Glue — crawlers and cataloging',t:'2 days'},{n:'Athena — serverless SQL on S3',t:'2 days'},
+      {n:'AWS Lambda — event-driven functions',t:'2 days'},{n:'AWS Kinesis — streaming data',t:'3 days'},
+      {n:'Redshift — data warehouse basics',t:'2 days'},{n:'EMR — managed Spark on AWS',t:'2 days'},
+      {n:'CloudWatch — monitoring and alerting',t:'1 day'},{n:'Step Functions — workflow orchestration',t:'2 days'}
+    ]}
+];
+
+const PREREQS = [
+  {id:'kafka', name:'Kafka fundamentals', source:'Phase 07 — Streaming', phase:'p7'},
+  {id:'streaming', name:'Spark Structured Streaming', source:'Phase 07 — Streaming', phase:'p7'},
+  {id:'azure_eh', name:'Azure Event Hubs', source:'Phase 05 — Azure', phase:'p5'},
+  {id:'docker', name:'Docker fundamentals', source:'Phase 08 — Docker', phase:'p8'},
+  {id:'terraform', name:'Terraform', source:'Phase 09 — IaC', phase:'p9'},
+  {id:'cicd', name:'GitHub Actions CI/CD', source:'Phase 09 — IaC', phase:'p9'},
+  {id:'dlt_stream', name:'DLT Streaming Tables', source:'Phase 07 — Streaming', phase:'p7'},
+  {id:'delta_merge', name:'Delta MERGE patterns', source:'Phase 01 — Databricks I', phase:'p1'},
+  {id:'python_async', name:'Python asyncio', source:'Self-study', phase:null}
+];
+
+const NV_PHASES = [
+  {num:'V1', name:'500 agents, Kafka, Bronze layer, 3 fraud signals', detail:'Proof of stream — minimal viable pipeline', time:'1 month'},
+  {num:'V2', name:'Watermarking, late arrivals, dead letter queue, observability', detail:'Reliability — production-grade resilience', time:'1 month'},
+  {num:'V3', name:'Scale to 177,000 agents, partition optimisation, load testing', detail:'Scale — approaching election-day volumes', time:'1 month'},
+  {num:'V4', name:'Geospatial map, fraud ML scoring, full documentation, YouTube series', detail:'Intelligence — analytics layer complete', time:'1 month'}
+];
+
+let state = {}, activePhase = 'p0', focusedSkill = -1;
+
+function save() { try { localStorage.setItem('dwd_premium_v1', JSON.stringify(state)); } catch(e){} }
+function load() { try { const d = localStorage.getItem('dwd_premium_v1'); if(d) state = JSON.parse(d); } catch(e){} }
+
+function phaseProg(p) {
+  if(p.mastered) return {d:p.skills.length, t:p.skills.length};
+  let d=0; p.skills.forEach((_,i)=>{ if(state[p.id+'_'+i]) d++; });
+  return {d, t:p.skills.length};
+}
+
+function totalProg() {
+  let d=0, t=0;
+  PHASES.forEach(p=>{ const pr=phaseProg(p); d+=pr.d; t+=pr.t; });
+  return {d,t};
+}
+
+function naijaProg() {
+  let d=0;
+  PREREQS.forEach(r=>{
+    if(!r.phase){ if(state['nj_'+r.id]) d++; return; }
+    const ph=PHASES.find(p=>p.id===r.phase);
+    if(ph){ const pr=phaseProg(ph); if(pr.d===pr.t&&pr.t>0) d++; }
+  });
+  return {d, t:PREREQS.length};
+}
+
+function renderRail() {
+  const {d,t} = totalProg();
+  const pct = Math.round(d/t*100);
+  document.getElementById('railPct').textContent = pct+'%';
+  document.getElementById('railBar').style.width = pct+'%';
+
+  document.getElementById('railPhases').innerHTML = PHASES.map((p,i)=>{
+    const pr = phaseProg(p);
+    const fillPct = Math.round(pr.d/pr.t*100);
+    const isDone = pr.d===pr.t;
+    const isActive = activePhase===p.id;
+    return `<div class="phase-item ${isActive?'active':''} ${isDone?'phase-done':''}" onclick="switchPhase('${p.id}')">
+      <span class="phase-num">${p.num}</span>
+      <div class="phase-name-wrap"><div class="phase-name">${p.label}</div></div>
+      <div class="phase-pip"><div class="phase-pip-fill" style="width:${fillPct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  const np = naijaProg();
+  const btn = document.getElementById('naijaBtnRail');
+  if(np.d === np.t) btn.classList.add('ready'); else btn.classList.remove('ready');
+}
+
+function renderPhase() {
+  const p = PHASES.find(x=>x.id===activePhase);
+  if(!p) return;
+  const pr = phaseProg(p);
+  const pct = Math.round(pr.d/pr.t*100);
+  const idx = PHASES.indexOf(p);
+
+  document.getElementById('phaseCounter').textContent = 'PHASE '+p.num;
+  document.getElementById('phaseFraction').textContent = pr.d+' / '+pr.t;
+  document.getElementById('ghostNum').textContent = p.num;
+  document.getElementById('phaseBigTitle').innerHTML = `<span>${p.title}</span> <span class="gold">${p.gold}</span><span class="ghost-num">${p.num}</span>`;
+  document.getElementById('phaseTier').textContent = p.tier;
+  document.getElementById('phaseBar').style.width = pct+'%';
+  document.getElementById('phasePct').textContent = pct+'%';
+  if(pct===100) document.getElementById('phaseTier').innerHTML = `<span class="phase-complete-badge">✦ Phase Complete</span>`;
+
+  const {d,t} = totalProg();
+  document.getElementById('statsStrip').innerHTML = `
+    <div class="stat-cell"><div class="sc-num gold">${pr.d}</div><div class="sc-label">Phase Done</div></div>
+    <div class="stat-cell"><div class="sc-num">${pr.t - pr.d}</div><div class="sc-label">Remaining</div></div>
+    <div class="stat-cell"><div class="sc-num">${t-d}</div><div class="sc-label">Total Left</div></div>`;
+
+  if(p.mastered) {
+    document.getElementById('skillsScroll').innerHTML = `<div class="mastered-note">Foundation — ${p.skills.length} skills locked in</div>` +
+      p.skills.map(s=>`<div class="skill-row mastered done">
+        <div class="sk-check"><span class="sk-check-mark">✓</span></div>
+        <div class="sk-name">${s}</div>
+        <div class="sk-time">Mastered</div>
+      </div>`).join('');
+  } else {
+    document.getElementById('skillsScroll').innerHTML = p.skills.map((s,i)=>{
+      const k=p.id+'_'+i, done=!!state[k];
+      return `<div class="skill-row ${done?'done':''}" onclick="toggle('${k}')">
+        <div class="sk-check"><span class="sk-check-mark">✓</span></div>
+        <div class="sk-name">${s.n}</div>
+        <div class="sk-time">${s.t}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderNaija() {
+  const np = naijaProg();
+  const pct = Math.round(np.d/np.t*100);
+  document.getElementById('nubFill').style.width = pct+'%';
+  document.getElementById('nubLabel').textContent = np.d+' / '+np.t;
+
+  document.getElementById('prereqGrid').innerHTML = PREREQS.map(r=>{
+    let done=false;
+    if(!r.phase){ done=!!state['nj_'+r.id]; }
+    else { const ph=PHASES.find(p=>p.id===r.phase); if(ph){const pr2=phaseProg(ph);done=pr2.d===pr2.t&&pr2.t>0;} }
+    const manual=!r.phase;
+    return `<div class="prereq-card ${done?'done':''} ${manual?'manual':''}" ${manual?`onclick="toggleNj('${r.id}')"`:''}> 
+      <div class="pc-status"><div class="pc-dot"></div><div class="pc-label">${done?'Complete':'Pending'}</div></div>
+      <div class="pc-name">${r.name}</div>
+      <div style="margin-top:6px;font-family:var(--mono);font-size:9px;color:var(--text-dim);letter-spacing:1px">${r.source}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('naijaPhaseslist').innerHTML = NV_PHASES.map((v,i)=>`
+    <div class="nv-phase-row">
+      <div class="nv-phase-num">${v.num}</div>
+      <div class="nv-phase-content">
+        <div class="nv-phase-name">${v.name}</div>
+        <div class="nv-phase-detail">${v.detail}</div>
+      </div>
+      <div class="nv-phase-time">${v.time}</div>
+    </div>`).join('');
+}
+
+function toggle(k) {
+  state[k]=!state[k]; save();
+  renderRail(); renderPhase();
+}
+
+function toggleNj(id) {
+  state['nj_'+id]=!state['nj_'+id]; save();
+  renderNaija(); renderRail();
+}
+
+function switchPhase(id) {
+  activePhase=id;
+  document.getElementById('phaseView').classList.add('visible');
+  document.getElementById('naijaView').classList.remove('visible');
+  renderRail(); renderPhase();
+}
+
+function showNaija() {
+  document.getElementById('phaseView').classList.remove('visible');
+  document.getElementById('naijaView').classList.add('visible');
+  renderNaija();
+}
+
+function hideNaija() {
+  document.getElementById('naijaView').classList.remove('visible');
+  document.getElementById('phaseView').classList.add('visible');
+  renderRail(); renderPhase();
+}
+
+document.addEventListener('keydown', e=>{
+  if(document.getElementById('naijaView').classList.contains('visible')) return;
+  const idx = PHASES.findIndex(p=>p.id===activePhase);
+  if(e.key==='ArrowDown' && idx<PHASES.length-1) { e.preventDefault(); switchPhase(PHASES[idx+1].id); }
+  if(e.key==='ArrowUp' && idx>0) { e.preventDefault(); switchPhase(PHASES[idx-1].id); }
+});
+
+load(); renderRail(); renderPhase();
+</script>
+</body>
+</html>
